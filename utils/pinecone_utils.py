@@ -13,24 +13,27 @@ from pinecone import Pinecone, ServerlessSpec
 
 from config import (
     EMBEDDING_DIMENSIONS,
-    PINECONE_API_KEY,
-    PINECONE_HOST,
-    PINECONE_INDEX_NAME,
     PINECONE_METRIC,
+    get_pinecone_api_key,
+    get_pinecone_host,
+    get_pinecone_index_name,
 )
 
 _METADATA_CONTENT_LIMIT = 38000  # bytes; Pinecone hard limit is 40KB per field
 
 
 def get_pinecone_client() -> Pinecone:
-    return Pinecone(api_key=PINECONE_API_KEY)
+    return Pinecone(api_key=get_pinecone_api_key())
 
 
-def get_or_create_index(pc: Pinecone, index_name: str = PINECONE_INDEX_NAME):
+def get_or_create_index(pc: Pinecone, index_name: str = None):
+    index_name = index_name or get_pinecone_index_name()
+    host = get_pinecone_host()
+
     # If a direct host is configured, connect to it without listing/creating indexes
-    if PINECONE_HOST:
-        print(f"Connecting to Pinecone index via host: {PINECONE_HOST}")
-        return pc.Index(host=PINECONE_HOST)
+    if host:
+        print(f"Connecting to Pinecone index via host: {host}")
+        return pc.Index(host=host)
 
     existing = [i.name for i in pc.list_indexes()]
     if index_name not in existing:
@@ -63,7 +66,6 @@ def build_pinecone_records(chunks: list, embeddings_model: OpenAIEmbeddings) -> 
     texts = [c["content"] for c in chunks]
 
     print(f"  Embedding {len(texts)} chunks...")
-    # Batch embed for efficiency
     vectors = embeddings_model.embed_documents(texts)
 
     for i, (chunk, vector) in enumerate(zip(chunks, vectors)):

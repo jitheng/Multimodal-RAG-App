@@ -13,10 +13,10 @@ from langchain_openai import OpenAIEmbeddings
 from config import (
     EMBEDDING_DIMENSIONS,
     EMBEDDING_MODEL,
-    OPENAI_API_KEY,
-    OPENAI_BASE_URL,
     SEMANTIC_CHUNK_BREAKPOINT,
     SEMANTIC_CHUNK_THRESHOLD,
+    get_openai_api_key,
+    get_openai_base_url,
 )
 
 
@@ -24,8 +24,8 @@ def get_embeddings_model() -> OpenAIEmbeddings:
     return OpenAIEmbeddings(
         model=EMBEDDING_MODEL,
         dimensions=EMBEDDING_DIMENSIONS,
-        openai_api_key=OPENAI_API_KEY,
-        openai_api_base=OPENAI_BASE_URL,
+        openai_api_key=get_openai_api_key(),
+        openai_api_base=get_openai_base_url(),
     )
 
 

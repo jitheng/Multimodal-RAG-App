@@ -22,7 +22,7 @@ from pathlib import Path
 import openai
 from pdf2image import convert_from_path
 
-from config import IMAGE_DIR, OPENAI_API_KEY, OPENAI_BASE_URL, VISION_MODEL
+from config import IMAGE_DIR, VISION_MODEL, get_openai_api_key, get_openai_base_url
 
 # ---------------------------------------------------------------------------
 # Page → image conversion
@@ -205,7 +205,7 @@ def process_pdf(pdf_path: str, pdf_name: str) -> list[dict]:
     Full pipeline: PDF → page images → GPT-4o vision analysis → chunks.
     Returns all chunks (text + table + image) ready for embedding.
     """
-    client = openai.OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
+    client = openai.OpenAI(api_key=get_openai_api_key(), base_url=get_openai_base_url())
 
     print("  Converting pages to images...")
     page_images = pdf_pages_to_images(pdf_path)

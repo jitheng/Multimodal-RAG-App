@@ -15,11 +15,11 @@ from langchain_openai import ChatOpenAI
 
 from config import (
     GENERATION_MODEL,
-    OPENAI_API_KEY,
-    OPENAI_BASE_URL,
-    PINECONE_NAMESPACE,
     SCORE_THRESHOLD,
     TOP_K,
+    get_openai_api_key,
+    get_openai_base_url,
+    get_pinecone_namespace,
 )
 from utils.embeddings import get_embeddings_model
 from utils.pinecone_utils import get_or_create_index, get_pinecone_client, get_vectorstore
@@ -155,8 +155,8 @@ def build_rag_chain(vectorstore, return_sources: bool = False):
     llm = ChatOpenAI(
         model=GENERATION_MODEL,
         temperature=0.1,
-        openai_api_key=OPENAI_API_KEY,
-        openai_api_base=OPENAI_BASE_URL,
+        openai_api_key=get_openai_api_key(),
+        openai_api_base=get_openai_base_url(),
     )
 
     retriever = vectorstore.as_retriever(
@@ -203,7 +203,8 @@ def build_rag_chain(vectorstore, return_sources: bool = False):
     return chain
 
 
-def get_rag_chain(namespace: str = PINECONE_NAMESPACE, return_sources: bool = True):
+def get_rag_chain(namespace: str = None, return_sources: bool = True):
+    namespace = namespace or get_pinecone_namespace()
     """Convenience factory: initialise all dependencies and return the chain."""
     embeddings_model = get_embeddings_model()
     pc = get_pinecone_client()

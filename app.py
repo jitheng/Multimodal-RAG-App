@@ -11,7 +11,7 @@ from pathlib import Path
 
 import streamlit as st
 
-from config import PDF_DIR, PINECONE_NAMESPACE
+from config import PDF_DIR, get_openai_api_key, get_pinecone_api_key, get_pinecone_namespace
 from ingest import run_ingestion
 from rag import get_rag_chain
 
@@ -43,7 +43,23 @@ with st.sidebar:
     st.title("📄 Upload Manual")
     st.caption("Upload a PDF technical manual to ingest into the knowledge base.")
 
-    namespace_input = st.text_input("Pinecone namespace", value=PINECONE_NAMESPACE)
+    # ── Config health check ──────────────────────────────────────────────
+    openai_key = get_openai_api_key()
+    pinecone_key = get_pinecone_api_key()
+    missing = []
+    if not openai_key:
+        missing.append("OPENAI_API_KEY")
+    if not pinecone_key:
+        missing.append("PINECONE_API_KEY")
+    if missing:
+        st.error(f"Missing secrets: {', '.join(missing)}\nAdd them in App Settings → Secrets.")
+        st.stop()
+
+    with st.expander("🔑 Config status", expanded=False):
+        st.caption(f"OpenAI key: `...{openai_key[-6:]}`")
+        st.caption(f"Pinecone key: `...{pinecone_key[-6:]}`")
+
+    namespace_input = st.text_input("Pinecone namespace", value=get_pinecone_namespace())
 
     uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"])
 
