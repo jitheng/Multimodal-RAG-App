@@ -1,0 +1,27 @@
+# Core LangChain stack
+langchain>=0.3.0
+langchain-openai>=0.2.0
+langchain-pinecone>=0.2.0
+langchain-community>=0.3.0
+langchain-experimental>=0.3.0
+
+# PDF processing
+unstructured[all-docs]>=0.16.0
+unstructured-inference>=0.7.0
+pdfminer.six>=20231228
+pdf2image>=1.17.0
+pytesseract>=0.3.13
+pillow>=10.0.0
+
+# Vector store + embeddings
+pinecone>=5.0.0
+openai>=1.40.0
+
+# App framework
+streamlit>=1.38.0
+python-dotenv>=1.0.0
+
+# Utilities
+pandas>=2.0.0
+tabulate>=0.9.0
+tqdm>=4.66.0
