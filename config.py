@@ -1,21 +1,32 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def _get(key: str, default: str = "") -> str:
+    """Read from Streamlit secrets first, then env vars, then default."""
+    try:
+        import streamlit as st
+        return st.secrets.get(key, os.getenv(key, default))
+    except Exception:
+        return os.getenv(key, default)
+
+
 # OpenAI
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+OPENAI_API_KEY = _get("OPENAI_API_KEY")
+OPENAI_BASE_URL = _get("OPENAI_BASE_URL", "https://api.openai.com/v1")
 EMBEDDING_MODEL = "text-embedding-3-large"
 EMBEDDING_DIMENSIONS = 1024
 GENERATION_MODEL = "gpt-4o"
 VISION_MODEL = "gpt-4o"
 
 # Pinecone
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "multimodal-rag")
-PINECONE_NAMESPACE = os.getenv("PINECONE_NAMESPACE", "eureka-manuals")
-PINECONE_HOST = os.getenv("PINECONE_HOST", "")
+PINECONE_API_KEY = _get("PINECONE_API_KEY")
+PINECONE_INDEX_NAME = _get("PINECONE_INDEX_NAME", "multimodal-rag")
+PINECONE_NAMESPACE = _get("PINECONE_NAMESPACE", "eureka-manuals")
+PINECONE_HOST = _get("PINECONE_HOST", "")
 PINECONE_METRIC = "cosine"
 
 # Chunking

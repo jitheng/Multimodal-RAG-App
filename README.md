@@ -155,6 +155,28 @@ Runs four sample queries (assembly, troubleshooting, specs, parts list) and prin
 
 ---
 
+## Deployment (Streamlit Cloud)
+
+1. Push this repo to GitHub (already done)
+2. Go to [share.streamlit.io](https://share.streamlit.io) → **New app**
+3. Select repo `jitheng/Multimodal-RAG-App`, branch `main`, file `app.py`
+4. Click **Advanced settings → Secrets** and paste:
+
+```toml
+OPENAI_API_KEY = "your-openai-api-key"
+OPENAI_BASE_URL = "https://api.openai.com/v1"
+PINECONE_API_KEY = "your-pinecone-api-key"
+PINECONE_INDEX_NAME = "multimodal-rag"
+PINECONE_NAMESPACE = "eureka-manuals"
+PINECONE_HOST = "your-pinecone-host-url"
+```
+
+5. Click **Deploy** — Streamlit Cloud installs dependencies and launches the app.
+
+> System dependency `poppler-utils` is declared in `packages.txt` and installed automatically.
+
+---
+
 ## Example Queries
 
 - *"How do I assemble the vacuum cleaner?"*
